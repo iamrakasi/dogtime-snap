@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 const DogCard = (dog: Dog) => {
   const classes = useStyles()
   return (
-    <Grid item xs={2} key={dog.Name}>
+    <Grid item xs={6} sm={4} md={2} key={dog.Name}>
       <Link href={dog.ProfileUrl} target="blank">
         <Paper className={classes.dog}>
           <div>

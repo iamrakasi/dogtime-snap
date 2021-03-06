@@ -5,6 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
 import Slider from '@material-ui/core/Slider'
 import {
   getDogCharacteristics,
@@ -64,7 +66,7 @@ function App() {
       <CssBaseline />
       <div className="hola">
         <Grid container spacing={0}>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Paper className={classes.selectParent}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="demo-simple-select-outlined-label">
@@ -91,6 +93,9 @@ function App() {
             {activeFilters.map(a => (
               <Paper className={classes.paper} key={a.char}>
                 <Typography id={a.char} gutterBottom>
+                  <IconButton aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
                   {a.char}
                 </Typography>
                 <Slider
@@ -108,7 +113,7 @@ function App() {
               </Paper>
             ))}
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
             <Grid container>
               {dogs.map(dog => (
                 <DogCard {...dog} />
