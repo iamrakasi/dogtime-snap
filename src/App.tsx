@@ -56,11 +56,13 @@ function App() {
     })
     setActiveFilters([...activeFilters])
   }
+  const onRemoveFilter = (char: string) => {
+    setActiveFilters(prev => [...prev.filter(f => f.char !== char)])
+  }
   const classes = useStyles()
   const dogs = activeFilters.some(f => f.rating > 0)
     ? getDogsByCharacteristics(activeFilters.filter(f => f.rating > 0))
     : []
-  console.log('dogs', dogs)
   return (
     <div className="App">
       <CssBaseline />
@@ -93,10 +95,13 @@ function App() {
             {activeFilters.map(a => (
               <Paper className={classes.paper} key={a.char}>
                 <Typography id={a.char} gutterBottom>
-                  <IconButton aria-label="delete">
+                  {a.char}
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => onRemoveFilter(a.char)}
+                  >
                     <DeleteIcon />
                   </IconButton>
-                  {a.char}
                 </Typography>
                 <Slider
                   defaultValue={0}

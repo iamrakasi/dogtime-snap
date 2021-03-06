@@ -10,7 +10,6 @@ export const getDogCharacteristics = (): string[] => {
 export const getDogsByCharacteristics = (
   filters: CharacteristicFilter[],
 ): Dog[] => {
-  console.log('filters', filters)
   return dogData.filter(d =>
     filters.every(f =>
       d.Characteristics.some(
