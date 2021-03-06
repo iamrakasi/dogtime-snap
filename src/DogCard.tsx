@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
   },
   dogName: {
     paddingTop: theme.spacing(1),
-    fontSize: '1.1rem',
   },
   picture: {
     width: 'initial',
