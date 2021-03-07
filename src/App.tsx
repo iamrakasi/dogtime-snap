@@ -7,16 +7,19 @@ import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import FavoriteOutlined from '@material-ui/icons/FavoriteBorderOutlined'
 import Slider from '@material-ui/core/Slider'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import {makeStyles} from '@material-ui/core/styles'
 import {
   getDogCharacteristics,
   getDogsByCharacteristics,
 } from './services/dogService'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import {makeStyles} from '@material-ui/core/styles'
 import {CharacteristicFilter} from './FilterTypes'
 import DogCard from './DogCard'
+import Characteristics, {moreIsBetter} from './Characteristics'
 
 const useStyles = makeStyles(theme => ({
   selectParent: {
@@ -33,18 +36,30 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     padding: '20px 30px',
   },
+  favIcon: {
+    verticalAlign: 'middle',
+    color: '#f57a9c',
+    paddingBottom: '4px',
+    marginRight: '5px',
+  },
 }))
 
 function App() {
-  useEffect(() => {
-    setCharacteristics(getDogCharacteristics())
-  }, [])
   const [characteristics, setCharacteristics] = useState<string[]>([])
   const [activeFilters, setActiveFilters] = useState<CharacteristicFilter[]>([])
+  useEffect(() => {
+    setCharacteristics(
+      getDogCharacteristics().filter(
+        c => !activeFilters.find(a => a.char === c),
+      ),
+    )
+  }, [activeFilters])
   const handleChange = (e: React.ChangeEvent<{value: unknown}>) => {
+    const char = e.target.value as string
+    const selectedChar = Characteristics.find(c => c.label === char)
     setActiveFilters(prev => [
       ...prev,
-      {char: e.target.value as string, rating: 0},
+      {char, rating: selectedChar?.moreIsBetter ? 5 : 1},
     ])
     setCharacteristics(prev => prev.filter(c => c !== e.target.value))
   }
@@ -60,9 +75,8 @@ function App() {
     setActiveFilters(prev => [...prev.filter(f => f.char !== char)])
   }
   const classes = useStyles()
-  const dogs = activeFilters.some(f => f.rating > 0)
-    ? getDogsByCharacteristics(activeFilters.filter(f => f.rating > 0))
-    : []
+  const dogs =
+    activeFilters.length > 0 ? getDogsByCharacteristics(activeFilters) : []
   return (
     <div className="App">
       <CssBaseline />
@@ -95,6 +109,11 @@ function App() {
             {activeFilters.map(a => (
               <Paper className={classes.paper} key={a.char}>
                 <Typography id={a.char} gutterBottom>
+                  {moreIsBetter(a.char) ? (
+                    <FavoriteIcon className={classes.favIcon} />
+                  ) : (
+                    <FavoriteOutlined className={classes.favIcon} />
+                  )}
                   {a.char}
                   <IconButton
                     aria-label="delete"
@@ -104,12 +123,12 @@ function App() {
                   </IconButton>
                 </Typography>
                 <Slider
-                  defaultValue={0}
+                  defaultValue={a.rating}
                   aria-labelledby={a.char}
                   valueLabelDisplay="auto"
                   step={1}
                   marks
-                  min={0}
+                  min={1}
                   max={5}
                   onChange={(e, value) =>
                     onCharacteristicChange(a.char, value as number)

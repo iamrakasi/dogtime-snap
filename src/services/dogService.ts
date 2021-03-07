@@ -2,9 +2,10 @@ import dogData from './dogData.json'
 import {Dog} from '../DogTypes'
 import {CharacteristicFilter} from '../FilterTypes'
 import {moreIsBetter} from '../Characteristics'
+import Characteristics from '../Characteristics'
 
 export const getDogCharacteristics = (): string[] => {
-  return dogData[0].Characteristics.map(c => c.Char)
+  return Characteristics.map(c => c.label)
 }
 
 export const getDogsByCharacteristics = (
